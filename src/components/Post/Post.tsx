@@ -197,7 +197,7 @@ export default (props: Props) => {
           mediaUrls={mediaUrls}
         />})
     }
-    if (props.data.poll.choices && props.data.poll.choices.length > 0) {
+    if (props.data.poll !== null) {
       postAttachments.push({
         title: 'Poll',
         icon: <ChartSquareBarIcon />,

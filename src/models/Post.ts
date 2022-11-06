@@ -35,7 +35,7 @@ export interface ResharedPost {
   content: string,
   media_urls: string[]
   media_urls_v2: MediaUrlV2[]
-  poll: Poll,
+  poll: Poll | null,
   deleted: boolean
   blocked: boolean
 }
@@ -69,6 +69,6 @@ export default interface Post {
   deleted: boolean
   blocked: boolean
   is_update_avatar: boolean
-  poll: Poll,
+  poll: Poll | null,
   link_previews: LinkPreview[]
 }

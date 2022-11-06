@@ -19,7 +19,6 @@ export default (props: Props) => {
   const { resharedFrom } = props
 
   const history = useHistory()
-  const hasPoll = resharedFrom.poll.choices && resharedFrom.poll.choices.length > 0
 
   return (
     <>
@@ -50,7 +49,7 @@ export default (props: Props) => {
           <MediaCollage mediaUrls={resharedFrom.media_urls_v2} />
         }
         {
-          !resharedFrom.deleted && hasPoll &&
+          !resharedFrom.deleted && resharedFrom.poll !== null &&
           <Poll poll={resharedFrom.poll} postId={resharedFrom.id} me={props.me} edgeless={true}/>
         }
       </div>
