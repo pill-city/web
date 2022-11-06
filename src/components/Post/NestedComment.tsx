@@ -81,7 +81,7 @@ export default (props: Props) => {
           <div style={{fontStyle: 'italic'}}>This comment has been deleted</div>
         }
         {
-          !deleting && !deleted && !blocked && nestedComment.media_urls.length > 0 &&
+          !deleting && !deleted && !blocked && nestedComment.media_urls_v2.length > 0 &&
           <div>
             <MediaCollage mediaUrls={[nestedComment.media_urls_v2[0]]}/>
           </div>

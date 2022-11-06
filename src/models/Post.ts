@@ -11,7 +11,6 @@ interface BaseComment {
   content: string
   deleted: boolean
   blocked: boolean
-  media_urls: string[],
   media_urls_v2: MediaUrlV2[],
   reply_to_comment_id: string
 }
@@ -33,7 +32,6 @@ export interface ResharedPost {
   created_at_seconds: number
   author: User
   content: string,
-  media_urls: string[]
   media_urls_v2: MediaUrlV2[]
   poll: Poll | null,
   deleted: boolean
@@ -43,7 +41,6 @@ export interface ResharedPost {
 export interface PollChoice {
   id: string,
   content: string,
-  media?: Media,
   media_url_v2?: MediaUrlV2
   voters: User[]
 }
@@ -63,7 +60,6 @@ export default interface Post {
   reactions: Reaction[],
   comments: Comment[],
   circles: AnonymizedCircle[],
-  media_urls: string[]
   media_urls_v2: MediaUrlV2[]
   content: string,
   deleted: boolean
