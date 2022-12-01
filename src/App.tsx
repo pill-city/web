@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
+  Redirect, useHistory
 } from 'react-router-dom'
 import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
@@ -39,8 +39,15 @@ interface AuthenticatedProps {
 }
 
 const Authenticated = (props: AuthenticatedProps) => {
+  const history = useHistory();
+
   if (!accessTokenExists()) {
-    return <Redirect to='/signin'/>
+    const from = history.location.pathname;
+    if (from !== '/signin') {
+      return <Redirect to={`/signin?next=${history.location.pathname}`}/>
+    } else {
+      return <Redirect to={`/signin`}/>
+    }
   }
   return (
     <>

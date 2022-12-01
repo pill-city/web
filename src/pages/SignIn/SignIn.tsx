@@ -2,9 +2,12 @@ import React, {useEffect, useState} from 'react';
 import HomePage from "../../components/HomePage/HomePage";
 import api from "../../api/Api";
 import {validateId, validatePassword} from "../../utils/validators";
+import useQuery from "../../utils/useQuery";
 import "./SignIn.css"
 
 const SignInForm = () => {
+  const query = useQuery();
+
   const [id, updateId] = useState('')
   const [password, updatePassword] = useState('')
   const [signInLoading, updateSignInLoading] = useState(false)
@@ -29,9 +32,9 @@ const SignInForm = () => {
     updateSignInLoading(true)
     try {
       await api.signIn(id, password)
-      // This is needed so that the App component is fully reloaded
+      // window.location.href is needed so that the App component is fully reloaded
       // so that getting the first home page and auto refresh is enabled
-      window.location.href = '/'
+      window.location.href = query.get('next') || '/'
     } catch (e: any) {
       if (e.message) {
         alert(e.message)
