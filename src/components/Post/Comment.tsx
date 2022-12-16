@@ -12,6 +12,7 @@ import "./Comment.css"
 import {DotsVerticalIcon} from "@heroicons/react/solid";
 import PillDropdownMenu from "../PillDropdownMenu/PillDropdownMenu";
 import MediaCollage from "../MediaCollage/MediaCollage";
+import EntityState from "../../models/EntityState";
 
 interface Props {
   me: User
@@ -28,8 +29,9 @@ export default (props: Props) => {
   const { comment } = props
   const isHighlightComment = props.highlightCommentId
   const [ deleting, updateDeleting ] = useState(false)
-  const [ deleted, updateDeleted ] = useState(comment.deleted)
-  const blocked = props.comment.blocked
+  const [ state, updateState ] = useState<EntityState>(comment.state)
+  const deleted = state === "deleted"
+  const blocked = state === "author_blocked"
   const [ replyHighlightCommentId, updateReplyHighlightCommentId ] = useState('')
 
   const nestedCommentElems = []
@@ -68,7 +70,7 @@ export default (props: Props) => {
     }
     updateDeleting(true)
     await api.deleteComment(props.post.id, comment.id)
-    updateDeleted(true)
+    updateState("deleted")
     updateDeleting(false)
   }
 

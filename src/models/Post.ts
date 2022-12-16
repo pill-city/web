@@ -1,18 +1,17 @@
 import User from "./User";
 import {AnonymizedCircle} from "./Circle";
-import Media from "./Media";
 import MediaUrlV2 from "./MediaUrlV2";
 import LinkPreview from "./LinkPreview";
+import EntityState from "./EntityState";
 
 interface BaseComment {
   id: string
   created_at_seconds: number
   author: User
   content: string
-  deleted: boolean
-  blocked: boolean
-  media_urls_v2: MediaUrlV2[],
+  media_urls_v2: MediaUrlV2[]
   reply_to_comment_id: string
+  state: EntityState
 }
 
 export type NestedComment = BaseComment
@@ -34,8 +33,7 @@ export interface ResharedPost {
   content: string,
   media_urls_v2: MediaUrlV2[]
   poll: Poll | null,
-  deleted: boolean
-  blocked: boolean
+  state: EntityState
 }
 
 export interface PollChoice {
@@ -62,9 +60,8 @@ export default interface Post {
   circles: AnonymizedCircle[],
   media_urls_v2: MediaUrlV2[]
   content: string,
-  deleted: boolean
-  blocked: boolean
   is_update_avatar: boolean
   poll: Poll | null,
   link_previews: LinkPreview[]
+  state: EntityState
 }

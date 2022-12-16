@@ -26,6 +26,7 @@ import MediaCollage from "../MediaCollage/MediaCollage";
 import "./Post.css"
 import Poll from '../Poll/Poll';
 import PillSlide, {Slide} from "../PillSlide/PillSlide";
+import EntityState from "../../models/EntityState";
 
 interface Props {
   data: Post
@@ -39,9 +40,10 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const [deleted, updateDeleted] = useState(props.data.deleted)
+  const [state, updateState] = useState<EntityState>(props.data.state)
   const [deleting, updateDeleting] = useState(false)
-  const blocked = props.data.blocked
+  const deleted = state === 'deleted'
+  const blocked = state === 'author_blocked'
   const [commentContent, updateCommentContent] = useState('')
 
   // existing comment data cached in state
@@ -101,7 +103,7 @@ export default (props: Props) => {
     }
     updateDeleting(true)
     await api.deletePost(props.data.id)
-    updateDeleted(true)
+    updateState('deleted')
     updateDeleting(false)
   }
 

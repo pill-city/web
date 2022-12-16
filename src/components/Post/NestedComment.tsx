@@ -10,6 +10,7 @@ import './NestedComment.css'
 import {DotsVerticalIcon, ReplyIcon} from "@heroicons/react/solid";
 import PillDropdownMenu from "../PillDropdownMenu/PillDropdownMenu";
 import MediaCollage from "../MediaCollage/MediaCollage";
+import EntityState from "../../models/EntityState";
 
 interface Props {
   me: User
@@ -25,9 +26,10 @@ interface Props {
 export default (props: Props) => {
   const { nestedComment, parentComment, post } = props
   const isHighlightComment = props.highlightCommentId === nestedComment.id
-  const [ deleted, updateDeleted ] = useState(nestedComment.deleted)
+  const [ state, updateState ] = useState<EntityState>(nestedComment.state)
   const [ deleting, updateDeleting ] = useState(false)
-  const blocked = props.nestedComment.blocked
+  const deleted = state === "deleted"
+  const blocked = state === 'author_blocked'
 
   const onReply = () => {
     if (deleting) {
@@ -47,7 +49,7 @@ export default (props: Props) => {
     updateDeleting(true)
     await api.deleteNestedComment(post.id, parentComment.id, nestedComment.id)
     // mark as deleted and not deleting
-    updateDeleted(true)
+    updateState("deleted")
     updateDeleting(false)
   }
 
@@ -89,7 +91,7 @@ export default (props: Props) => {
         <div className='post-nested-comment-actions'>
           <span className="post-nested-comment-time">{pastTime(nestedComment.created_at_seconds)}</span>
           {
-            !deleting && !deleted && !blocked && !parentComment.deleted &&
+            !deleting && !deleted && !blocked && parentComment.state !== 'deleted' &&
             <span className="post-nested-comment-reply-btn" onClick={onReply}>
             Reply
           </span>
