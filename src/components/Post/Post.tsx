@@ -29,25 +29,25 @@ import PillSlide, {Slide} from "../PillSlide/PillSlide";
 import EntityState from "../../models/EntityState";
 
 interface Props {
-  data: Post
+  post: Post
   highlightCommentId?: string
   me: User
   detail: boolean
   hasNewPostModal: boolean,
   updateNewPostOpened: (arg0: boolean) => void
-  updateResharePostData: (arg0: Post | ResharedPostModel | null) => void
+  updateResharedPost: (arg0: Post | ResharedPostModel | null) => void
   disableNavigateToPostPage?: true
 }
 
 export default (props: Props) => {
-  const [state, updateState] = useState<EntityState>(props.data.state)
+  const [state, updateState] = useState<EntityState>(props.post.state)
   const [deleting, updateDeleting] = useState(false)
   const deleted = state === 'deleted'
   const blocked = state === 'author_blocked'
   const [commentContent, updateCommentContent] = useState('')
 
   // existing comment data cached in state
-  const [comments, updateComments] = useState(props.data.comments)
+  const [comments, updateComments] = useState(props.post.comments)
   // whether the comment box is expanded
   const [addingComment, updateAddingComment] = useState(false)
   // currently replying to comment
@@ -55,7 +55,7 @@ export default (props: Props) => {
   // currently replying to nested comment
   const [replyingToNestedComment, updateReplyingToNestedComment] = useState<NestedCommentModel | null>(null)
 
-  const [mediaUrls, updateMediaUrls] = useState(props.data.media_urls_v2)
+  const [mediaUrls, updateMediaUrls] = useState(props.post.media_urls_v2)
 
   const history = useHistory()
 
@@ -76,7 +76,7 @@ export default (props: Props) => {
         key={comment.id}
         me={props.me}
         comment={comment}
-        post={props.data}
+        post={props.post}
         detail={props.detail}
         highlightCommentId={highlightCommentId}
         highlightCommentRef={highlightCommentRef}
@@ -102,7 +102,7 @@ export default (props: Props) => {
       return
     }
     updateDeleting(true)
-    await api.deletePost(props.data.id)
+    await api.deletePost(props.post.id)
     updateState('deleted')
     updateDeleting(false)
   }
@@ -115,27 +115,27 @@ export default (props: Props) => {
       return
     }
     updateMediaUrls([])
-    await api.deletePostMedia(props.data.id)
+    await api.deletePostMedia(props.post.id)
   }
 
   const reshareButtonOnClick = () => {
     if (props.hasNewPostModal) {
       props.updateNewPostOpened(true)
     }
-    if (props.data.reshared_from === null) {
-      props.updateResharePostData(props.data)
+    if (props.post.reshared_from === null) {
+      props.updateResharedPost(props.post)
     } else {
-      props.updateResharePostData(props.data.reshared_from)
+      props.updateResharedPost(props.post.reshared_from)
     }
   }
 
   let sharingScope
-  if (props.data.is_public) {
+  if (props.post.is_public) {
     sharingScope = 'Public'
-  } else if (props.data.circles.length !== 0) {
+  } else if (props.post.circles.length !== 0) {
     let circleNames: string[] = []
     let circlesCount = 0
-    for (let circle of props.data.circles) {
+    for (let circle of props.post.circles) {
       if ("name" in circle) {
         circleNames = [...circleNames, circle.name]
       } else {
@@ -159,7 +159,7 @@ export default (props: Props) => {
   const navigateToPostPage = (e: any) => {
     e.preventDefault();
     if (!disableNavigateToPostPage) {
-      history.push(`/post/${props.data.id}`)
+      history.push(`/post/${props.post.id}`)
     }
   }
 
@@ -169,24 +169,24 @@ export default (props: Props) => {
   }
 
   const postAttachments: Slide[] = []
-  if (props.data.reshared_from) {
+  if (props.post.reshared_from) {
     postAttachments.push({
       title: 'Reshared Post',
       icon: <ShareIcon />,
       el: <ResharedPost
         key={'reshared-post'}
-        resharedFrom={props.data.reshared_from}
+        resharedFrom={props.post.reshared_from}
         showDetail={props.detail}
         me={props.me}
       />
     })
-    if (props.data.link_previews.length > 0) {
+    if (props.post.link_previews.length > 0) {
       postAttachments.push({
         title: 'Link Previews',
         icon: <LinkIcon />,
         el: <LinkPreviews
           key={'reshared-post-previews'}
-          post={props.data}
+          post={props.post}
         />})
     }
   } else {
@@ -199,25 +199,25 @@ export default (props: Props) => {
           mediaUrls={mediaUrls}
         />})
     }
-    if (props.data.poll !== null) {
+    if (props.post.poll !== null) {
       postAttachments.push({
         title: 'Poll',
         icon: <ChartSquareBarIcon />,
         el: <Poll
           key={'post-poll'}
-          poll={props.data.poll}
-          postId={props.data.id}
+          poll={props.post.poll}
+          postId={props.post.id}
           me={props.me}
         />
       })
     }
-    if (props.data.link_previews.length > 0) {
+    if (props.post.link_previews.length > 0) {
       postAttachments.push({
         title: 'Link Previews',
         icon: <LinkIcon />,
         el: <LinkPreviews
           key={'post-link-previews'}
-          post={props.data}
+          post={props.post}
         />
       })
     }
@@ -229,10 +229,10 @@ export default (props: Props) => {
         <div className="post-op-info-wrapper">
           <div className="post-op-info-left">
             <div className="post-avatar">
-              <RoundAvatar user={!blocked ? props.data.author : null}/>
+              <RoundAvatar user={!blocked ? props.post.author : null}/>
             </div>
             <div className="post-name">
-              <ClickableId user={!blocked ? props.data.author : null}/>
+              <ClickableId user={!blocked ? props.post.author : null}/>
             </div>
             <div className="post-visibility">
               &#x25B8; {sharingScope}
@@ -242,13 +242,13 @@ export default (props: Props) => {
             <div className="post-op-info-time" onClick={navigateToPostPage} style={{
               cursor: disableNavigateToPostPage ? 'auto' : 'pointer'
             }}>
-              {pastTime(props.data.created_at_seconds)}
+              {pastTime(props.post.created_at_seconds)}
             </div>
             {
-              props.me.id === props.data.author.id && !deleted && !deleting &&
+              props.me.id === props.post.author.id && !deleted && !deleting &&
               <PillDropdownMenu
                 items={
-                  mediaUrls.length > 0 && props.data.content ? [
+                  mediaUrls.length > 0 && props.post.content ? [
                     {
                       text: 'Delete all media',
                       onClick: deletePostMedia
@@ -276,10 +276,10 @@ export default (props: Props) => {
           {
             !deleting && !deleted ?
               !blocked ?
-                !props.data.is_update_avatar ?
-                  parseContentWithLinkPreviews(props.data.content, props.data.link_previews,`post-content ${props.detail ? '' : 'post-content-summary'}`)
+                !props.post.is_update_avatar ?
+                  parseContentWithLinkPreviews(props.post.content, props.post.link_previews,`post-content ${props.detail ? '' : 'post-content-summary'}`)
                   :
-                  <div className='post-content' style={{fontStyle: 'italic'}}>@{props.data.author.id} has a new
+                  <div className='post-content' style={{fontStyle: 'italic'}}>@{props.post.author.id} has a new
                     avatar!</div> :
                 <div className='post-content' style={{fontStyle: 'italic'}}>This user is blocked</div>
               :
@@ -294,15 +294,15 @@ export default (props: Props) => {
         {!deleting && !deleted && !blocked &&
           <div className="post-interactions-wrapper">
             <Reactions
-              reactions={props.data.reactions}
+              reactions={props.post.reactions}
               me={props.me}
-              postId={props.data.id}
+              postId={props.post.id}
             />
             <div className="post-interactions">
               <div className="post-circle-button" onClick={commentButtonOnClick}>
                 <ChatIcon />
               </div>
-              {props.data.reshareable ?
+              {props.post.reshareable ?
                 <div className="post-circle-button" onClick={reshareButtonOnClick}>
                   <ShareIcon />
                 </div>
@@ -316,7 +316,7 @@ export default (props: Props) => {
         }
         {addingComment && <CommentBox
           me={props.me}
-          post={props.data}
+          post={props.post}
           content={commentContent}
           updateContent={updateCommentContent}
           replyingToComment={replyingToComment}

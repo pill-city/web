@@ -27,8 +27,8 @@ import convertHeicFileToPng from "../../utils/convertHeicFileToPng";
 interface Props {
   beforePosting: () => void
   afterPosting: (post: Post) => void
-  resharePostData: Post | ResharedPost | null
-  updateResharePostData: (post: Post | null) => void
+  resharedPost: Post | ResharedPost | null
+  updateResharedPost: (post: Post | null) => void
 }
 
 type CircleIdOrPublic = string | boolean
@@ -130,9 +130,9 @@ export default (props: Props) => {
         content,
         isPublic,
         actualCircleIds,
-        props.resharePostData === null ? resharable : true,
-        props.resharePostData === null ? null : props.resharePostData.id,
-        props.resharePostData === null ? medias : [],
+        props.resharedPost === null ? resharable : true,
+        props.resharedPost === null ? null : props.resharedPost.id,
+        props.resharedPost === null ? medias : [],
         parseMentioned(content),
         pollChoices
       );
@@ -208,27 +208,27 @@ export default (props: Props) => {
           <ClickableId user={me}/>
         </div>
       </div>
-      {props.resharePostData !== null &&
+      {props.resharedPost !== null &&
         <div className="new-post-reshare-preview">
           <div className="new-post-reshared-info-wrapper">
             <div className="new-post-reshared-info">
               <div className="post-avatar post-reshared-avatar">
-                <RoundAvatar user={props.resharePostData.author}/>
+                <RoundAvatar user={props.resharedPost.author}/>
               </div>
               <div className="post-reshared-author">
-                <ClickableId user={props.resharePostData.author}/>
+                <ClickableId user={props.resharedPost.author}/>
               </div>
             </div>
-            <div className="new-post-reshare-delete" onClick={() => props.updateResharePostData(null)}>
+            <div className="new-post-reshare-delete" onClick={() => props.updateResharedPost(null)}>
               &times;
             </div>
           </div>
           <div className="post-content new-post-reshare-content-summary">
-            {parseContent(props.resharePostData.content, "")}
+            {parseContent(props.resharedPost.content, "")}
           </div>
         </div>
       }
-      {props.resharePostData === null &&
+      {props.resharedPost === null &&
         <>
           <MediaPane
             mediaUrls={medias.map(m => {
@@ -268,7 +268,7 @@ export default (props: Props) => {
         </>
       }
       <div className="new-post-text-box-container">
-        {props.resharePostData === null &&
+        {props.resharedPost === null &&
           <>
             <PillModal
               isOpen={addingMedia}
@@ -310,7 +310,7 @@ export default (props: Props) => {
         />
       </div>
       {
-        props.resharePostData === null &&
+        props.resharedPost === null &&
           <div className="new-post-attachment-buttons">
             <div
               className="new-post-attachment-button"
@@ -388,7 +388,7 @@ export default (props: Props) => {
         </PillModal>
       </div>
       <div className='new-post-btns'>
-        {props.resharePostData === null ?
+        {props.resharedPost === null ?
           <>
             <div className="new-post-resharable">
               <PillCheckbox

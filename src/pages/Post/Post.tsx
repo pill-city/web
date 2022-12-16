@@ -41,13 +41,13 @@ const PostPage = () => {
     return (
       <>
         <PostComponent
-          data={post}
+          post={post}
           highlightCommentId={highlightCommentId}
           me={me}
           detail={true}
           hasNewPostModal={true}
           updateNewPostOpened={updateMobileNewPostOpened}
-          updateResharePostData={updateResharePostData}
+          updateResharedPost={updateResharePostData}
           disableNavigateToPostPage={true}
         />
         <PillModal
@@ -56,8 +56,8 @@ const PostPage = () => {
           title="New post"
         >
           <NewPost
-            resharePostData={resharePost}
-            updateResharePostData={updateResharePostData}
+            resharedPost={resharePost}
+            updateResharedPost={updateResharePostData}
             beforePosting={() => {
               updateMobileNewPostOpened(false)
             }}
@@ -68,8 +68,8 @@ const PostPage = () => {
     )
   }
 
-  const updateResharePostData = (data: any) => {
-    updateResharePost(data)
+  const updateResharePostData = (resharedPost: any) => {
+    updateResharePost(resharedPost)
   }
 
   const updateMobileNewPostOpened = (opened: boolean) => {
