@@ -68,11 +68,11 @@ const Home = () => {
           ref={isInfiniteScrollTrigger ? observe : null}
         >
           <Post
-            data={post}
+            post={post}
             me={me}
             detail={false}
             hasNewPostModal={isMobile}
-            updateResharePostData={updateResharePostData}
+            updateResharedPost={updateResharePostData}
             updateNewPostOpened={updateMobileNewPostOpened}
           />
         </div>
@@ -126,8 +126,8 @@ const Home = () => {
 
   const newPostElem = (
     <NewPost
-      resharePostData={resharePostData}
-      updateResharePostData={updateResharePostData}
+      resharedPost={resharePostData}
+      updateResharedPost={updateResharePostData}
       beforePosting={() => {
         updateMobileNewPostOpened(false)
       }}

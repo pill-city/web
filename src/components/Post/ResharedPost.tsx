@@ -36,7 +36,7 @@ export default (props: Props) => {
         </div>
         <div className={`post-content ${props.showDetail ? '' : 'post-content-summary'}`}>
           {
-            !resharedFrom.deleted ?
+            resharedFrom.state !== 'deleted' ?
               parseContent(resharedFrom.content, "")
               :
               <div style={{fontStyle: 'italic'}}>This post has been deleted</div>
@@ -45,11 +45,11 @@ export default (props: Props) => {
       </div>
       <div className='post-reshared-attachments-wrapper'>
         {
-          !resharedFrom.deleted &&
+          resharedFrom.state !== 'deleted' &&
           <MediaCollage mediaUrls={resharedFrom.media_urls_v2} />
         }
         {
-          !resharedFrom.deleted && resharedFrom.poll !== null &&
+          resharedFrom.state !== 'deleted' && resharedFrom.poll !== null &&
           <Poll poll={resharedFrom.poll} postId={resharedFrom.id} me={props.me} edgeless={true}/>
         }
       </div>

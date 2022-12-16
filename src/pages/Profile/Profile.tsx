@@ -125,9 +125,9 @@ const Profile = () => {
             ref={isInfiniteScrollTrigger ? observe : null}
           >
             <PostComponent
-              data={post}
+              post={post}
               me={me}
-              updateResharePostData={updateResharePost}
+              updateResharedPost={updateResharePost}
               hasNewPostModal={true}
               updateNewPostOpened={updateNewPostOpened}
               detail={false}
@@ -345,8 +345,8 @@ const Profile = () => {
         title="New post"
       >
         <NewPost
-          resharePostData={resharePost}
-          updateResharePostData={updateResharePost}
+          resharedPost={resharePost}
+          updateResharedPost={updateResharePost}
           beforePosting={() => {
             updateNewPostOpened(false)
           }}
