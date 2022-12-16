@@ -25,6 +25,11 @@ interface Props {
 
 export default (props: Props) => {
   const { nestedComment, parentComment, post } = props
+
+  if (nestedComment.state === 'invisible') {
+    return null
+  }
+
   const isHighlightComment = props.highlightCommentId === nestedComment.id
   const [ state, updateState ] = useState<EntityState>(nestedComment.state)
   const [ deleting, updateDeleting ] = useState(false)

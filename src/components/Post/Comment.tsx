@@ -27,6 +27,11 @@ interface Props {
 
 export default (props: Props) => {
   const { comment } = props
+
+  if (comment.state === 'invisible') {
+    return null
+  }
+
   const isHighlightComment = props.highlightCommentId
   const [ deleting, updateDeleting ] = useState(false)
   const [ state, updateState ] = useState<EntityState>(comment.state)

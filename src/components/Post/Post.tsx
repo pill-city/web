@@ -40,6 +40,10 @@ interface Props {
 }
 
 export default (props: Props) => {
+  if (props.post.state === 'invisible') {
+    return null
+  }
+
   const [state, updateState] = useState<EntityState>(props.post.state)
   const [deleting, updateDeleting] = useState(false)
   const deleted = state === 'deleted'
